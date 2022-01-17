@@ -3,9 +3,12 @@ component {
     this.name = "addressBook";
     this.applicationTimeout = CreateTimeSpan(10, 0, 0, 0); //10 days
     this.datasource = "address_book";
+    this.sessionStorage = "address_book"
     this.sessionManagement = true;
     this.sessionTimeout = CreateTimeSpan(0, 0, 30, 0); //30 minutes
-    // this.customTagPaths = [ expandPath('/myAppCustomTags') ];
+    this.ormenabled = "true";
+    this.ormsettings={datasource="address_book", logsql="true"};
+    <!--- // this.customTagPaths = [ expandPath('/myAppCustomTags') ];
     // this.mappings = {
     //     "/foo" = expandPath('/com/myCompany/foo')
     // };
@@ -33,6 +36,6 @@ component {
 
     function onApplicationEnd( struct ApplicationScope ) {}
 
-    function onError( any Exception, string EventName ) {}
+    function onError( any Exception, string EventName ) {} --->
 
 }
