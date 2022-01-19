@@ -6,8 +6,8 @@ component persistent="true"  entityname="user" table="user" {
     property name="userName" column="username" ormtype="string";
     property name="password" column="password" ormtype="string";
     property name="email" column="email" ormtype="string";
-    property name="phone" column="phone" ormtype="string" notnull="true";
-    property name="profileImage" column="profile_img" ormtype="string" notnull="true";
+    property name="phone" column="phone" ormtype="string";
+    property name="profileImage" column="profile_img" ormtype="string";
 
     function getName() {
         name = variables.firstName & ' ' & variables.lastName;
