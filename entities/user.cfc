@@ -8,10 +8,9 @@ component persistent="true"  entityname="user" table="user" {
     property name="email" column="email" ormtype="string";
     property name="phone" column="phone" ormtype="string" notnull="true";
     property name="profileImage" column="profile_img" ormtype="string" notnull="true";
-    property name="createdAt" column="created_at" ormtype="date" notnull="true";
-    property name="updatedAt" column="updatedAt" ormtype="date" notnull="true";
 
     function getName() {
-        return uCase( variables.firstName + ' ' + variables.lastName );
+        name = variables.firstName & ' ' & variables.lastName;
+        return name;
     }
 }
