@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Address Book</title>
   </head>
-  <link rel="stylesheet" href="assets\css\bootstrap.css" />
+  <link rel="stylesheet" href="../assets/css/bootstrap.css" />
   <body>
     <button type="button">Logout</button>
     <button type="button" data-toggle="modal" data-target="#contactModal">
@@ -18,29 +18,57 @@
             <h4 class="modal-title">Contact Details</h4>
           </div>
           <div class="modal-body">
-            <form action="" method="post">
+            <form action="../controllers/contact.cfc?method=contact" enctype="multipart/form-data" method="post">
               <input type="hidden" name="id" value="0" />
               <select name="title" id="title">
-                <option value="1">Miss</option>
-                <option value="2">Mr</option>
-                <option value="3">Mrs</option>
+                <cfset titles = entityLoad( "title")>
+                <cfloop array="#titles#" index="title">
+                  <cfoutput>
+                    <option value="#title.id#">#title.name#</option>
+                  </cfoutput>
+                </cfloop>
               </select>
               <input type="text" name="firstname" id="firstname" />
               <input type="text" name="lastname" id="lastname" />
               <select name="gender" id="gender">
-                <option value="1">Male</option>
-                <option value="2">Female</option>
-                <option value="3">Others</option>
+                <cfset genders = entityLoad( "gender")>
+                <cfloop array="#genders#" index="gender">
+                  <cfoutput>
+                    <option value="#gender.id#">#gender.name#</option>
+                  </cfoutput>
+                </cfloop>
               </select>
+              <input type="tel" name="phone" id="phone" />
+              <input type="email" name="email" id="email" />
               <input type="date" name="dob" id="dob" />
               <input type="file" name="photo" id="photo" />
               <input type="text" name="address" id="address" />
-              <input type="text" name="city" id="city" />
-              <input type="text" name="state" id="state" />
-              <input type="text" name="country" id="country" />
+              <select name="country" id="country">
+                <cfset countries = entityLoad( "countries")>
+                <cfloop array="#countries#" index="country">
+                  <cfoutput>
+                    <option value="#country.id#">#country.name#</option>
+                  </cfoutput>
+                </cfloop>
+              </select>
+              <select name="state" id="state">
+                <cfset states = entityLoad( "states")>
+                <cfloop array="#states#" index="state">
+                  <cfoutput>
+                    <option value="#state.id#">#state.name#</option>
+                  </cfoutput>
+                </cfloop>
+              </select>
+              <select name="city" id="city">
+                <cfset cities = entityLoad( "cities")>
+                <cfloop array="#cities#" index="city">
+                  <cfoutput>
+                    <option value="#city.id#">#city.name#</option>
+                  </cfoutput>
+                </cfloop>
+              </select>
               <input type="text" name="pincode" id="pincode" />
-              <input type="email" name="email" id="email" />
-              <input type="tel" name="phone" id="phone" />
+              <input type="submit" name="submit" value="submit" />
             </form>
           </div>
 
@@ -63,22 +91,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><img src="" alt="" /></td>
-          <td>Name</td>
-          <td>email</td>
-          <td>phone number</td>
+        
+    <cfset contacts = entityLoad( "contact")>
+    <cfloop array="#contacts#" index="contact">
+      <cfoutput>
+          <td>
+    <cfimage action="writeToBrowser" source="#imageNew("E:\Work\Coldfusion\cfusion\wwwroot\addressbook\contactImages\#contact.getPhoto()#")#" name="image" width="50" height="50">
+          <td>#contact.getName()#</td>
+          <td>#contact.getEmail()#</td>
+          <td>#contact.getPhone()#</td>
           <td>edit</td>
           <td>delete</td>
           <td>view</td>
         </tr>
+      </cfoutput>
+    </cfloop>
+        <tr>
       </tbody>
     </table>
     <form action="" enctype="multipart/form-data" method="post">
       <input type="file" name="profile" />
       <input type="submit" value="submit" />
     </form>
-    <script src="assets\js\jquery.js"></script>
-    <script src="assets\js\bootstrap.bundle.js"></script>
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/bootstrap.bundle.js"></script>
   </body>
 </html>
