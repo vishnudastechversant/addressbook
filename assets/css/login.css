@@ -1,0 +1,39 @@
+@font-face {
+  font-family: Lobster;
+  src: url("../fonts/Lobster-Regular.ttf");
+}
+@font-face {
+  font-family: Fredoka;
+  src: url("../fonts/FredokaOne-Regular.ttf");
+}
+body {
+  background: rgba(235, 233, 233, 0.74);
+  font-family: Fredoka, sans-serif;
+}
+.form-block {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 7px 5px 20px 6px #a3a3a3;
+}
+.form-heading {
+  background: linear-gradient(171deg, #0099ff, #097cff);
+  padding: 10%;
+  color: #ffffff;
+}
+.form-heading h3 {
+  text-shadow: 3px 3px 4px black;
+}
+.custom-navbar {
+  background: linear-gradient(171deg, #0084ff, #309df7);
+}
+.custom-navbar a {
+  color: #ffffff;
+  font-size: x-large;
+}
+.form-container {
+  padding: 10%;
+}
+.login-logo {
+  font-size: 7em;
+  margin-left: -0.2em;
+}
