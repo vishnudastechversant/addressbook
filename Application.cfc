@@ -5,7 +5,7 @@ component {
     this.datasource = "addressBook";
     this.sessionStorage = "addressBook"
     this.sessionManagement = true;
-    this.sessionTimeout = CreateTimeSpan(0, 0, 30, 0); //30 minutes
+    this.sessionTimeout = CreateTimeSpan(0, 10, 0, 0); //30 minutes
     this.ormenabled = "true";
     this.ormsettings={logsql="true", datasource = "addressBook"};
     this.invokeImplicitAccessor = true;
