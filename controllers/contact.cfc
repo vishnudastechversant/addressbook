@@ -61,7 +61,7 @@
         <cfreturn true>
     </cffunction>
 
-     <cffunction  name="pdfdownload">
+     <cffunction  name="pdfdownload" access="remote">
         <cfset contactprint = EntityLoad("contact") />
         <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
         <table class="table">
@@ -87,9 +87,10 @@
         <!-- <cfheader name="Content-Disposition" value="attachment;filename=file.pdf">
         <cfcontent type="application/octet-stream" file="#expandPath('.')#\files\file.pdf" deletefile="Yes"> -->
         <cfprint type="pdf" source="file.pdf" printer="HP LaserJet 4345 CS">
+        <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
     
- <!---   <cffunction  name="exceldownload">
+    <cffunction  name="exceldownload" access="remote">
         <cfset contactprint = EntityLoad("contact") />
         <cfset spreadsheet = spreadsheetNew("Sheet A") />
         <cfset spreadsheetCreateSheet(spreadsheet, "Sheet B") />
@@ -99,14 +100,15 @@
         <cfset SpreadsheetSetCellValue(spreadsheet, "Phone", 1, 3) />
         <cfoutput>
             <cfloop array="#contactprint#" index="i">
-                <cfset SpreadSheetAddRow(spreadsheet,'#j.fname#,#j.email#,#j.phone#')/>
+                <cfset SpreadSheetAddRow(spreadsheet,'#i.firstName# #i.lastName#,#i.email#,#i.phone#')/>
             </cfloop>
         </cfoutput>
         <cfheader name="Content-Disposition" value="inline; filename=testFile.xls">
         <cfcontent type="application/vnd.msexcel" variable="#SpreadSheetReadBinary(spreadsheet)#">
-    </cffunction> --->
+        <cflocation  url="../pages/contact.cfm" addtoken="false"> 
+    </cffunction>
 
-    <cffunction  name="print">
+    <cffunction  name="print" access="remote">
         <cfset contactprint = EntityLoad("contact") />
         <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
         <table class="table">
@@ -130,5 +132,6 @@
         </table>
         </cfdocument> 
         <cfprint type="pdf" source="../files/file.pdf" printer="Microsoft Print to PDF">
+        <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
 </cfcomponent>

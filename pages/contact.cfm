@@ -30,9 +30,9 @@
         <div class="col-8 h-100">
           <div class="p-3 m-3 d-flex flex-column justify-content-center">
             <div class="bg-light d-flex justify-content-end">
-                <a href="" class=" text-danger convert-icons m-2 p-2"><i class="far fa-file-pdf"></i></a>
-                <a href="" class=" text-success convert-icons m-2 p-2"><i class="far fa-file-excel"></i></a>
-                <a href="" class=" text-dark convert-icons m-2 p-2"><i class="fas fa-print"></i></a>
+                <a href="../controllers/contact.cfc?method=print" class=" text-danger convert-icons m-2 p-2"><i class="far fa-file-pdf"></i></a>
+                <a href="../controllers/contact.cfc?method=exceldownload" class=" text-success convert-icons m-2 p-2"><i class="far fa-file-excel"></i></a>
+                <a href="../controllers/contact.cfc?method=pdfdownload" class=" text-dark convert-icons m-2 p-2"><i class="fas fa-print"></i></a>
             </div>
             <div class="bg-light mt-3 p-3">
               <table class="table table-borderless">
