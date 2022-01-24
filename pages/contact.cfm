@@ -16,11 +16,11 @@
     <section class="container-fluid h-100">
       <div class="row h-100">
         <div class="col-4 h-100 d-flex justify-content-center align-items-center">
-          <div class="bg-light p-3 m-3 d-flex flex-column justify-content-center text-center">
-            <form action="" enctype="multipart/form-data" method="post">
+          <div class="w-100 bg-light p-3 m-3 d-flex flex-column justify-content-center text-center">
+<!---             <form action="" enctype="multipart/form-data" method="post">
               <input type="file" name="profile" />
               <input type="submit" value="submit" />
-            </form>
+            </form> --->
             <h3><cfoutput>#session.user.name#</cfoutput></h3>
             <button type="button" data-toggle="modal" class="btn btn-primary" data-target="#contactModal">
               Create Contact
@@ -30,9 +30,9 @@
         <div class="col-8 h-100">
           <div class="p-3 m-3 d-flex flex-column justify-content-center">
             <div class="bg-light d-flex justify-content-end">
-              <a href="" class=" text-danger convert-icons m-2 p-2"><i class="far fa-file-pdf"></i></a>
-              <a href="" class=" text-success convert-icons m-2 p-2"><i class="far fa-file-excel"></i></a>
-              <a href="" class=" text-dark convert-icons m-2 p-2"><i class="fas fa-print"></i></a>
+                <a href="" class=" text-danger convert-icons m-2 p-2"><i class="far fa-file-pdf"></i></a>
+                <a href="" class=" text-success convert-icons m-2 p-2"><i class="far fa-file-excel"></i></a>
+                <a href="" class=" text-dark convert-icons m-2 p-2"><i class="fas fa-print"></i></a>
             </div>
             <div class="bg-light mt-3 p-3">
               <table class="table table-borderless">
@@ -46,7 +46,7 @@
                   </tr>
                 </thead>
                 <tbody>
-              <cfset contacts = entityLoad( "contact",{userCreated:session.user.userId})>
+              <cfset contacts = entityLoad( "contact",{userCreated:entityLoad( "user",session.user.userId,true)})>
               <cfloop array="#contacts#" index="contact">
                 <cfoutput>
                     <td><cfimage action="writeToBrowser" source="#imageNew("E:\Work\Coldfusion\cfusion\wwwroot\addressbook\contactImages\#contact.getPhoto()#")#" name="image" width="50" height="50"></td>
@@ -194,6 +194,54 @@
       </div>
     </div>
 
+    <div class="modal" id="contactDetailModal">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Contact Details</h4>
+          </div>
+          <div class="modal-body p-3">
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <td>Name</td>
+                  <td id="detailedName"><span id="detailedtitle"></span> <span id="detailedfirstname"></span>  <span id="detailedlastname"></span></td>
+                </tr>
+                <tr>
+                  <td>Gender</td>
+                  <td id="detailedGender"></td>
+                </tr>
+                <tr>
+                  <td>Date Of Birth</td>
+                  <td id="detailedDob"></td>
+                </tr>
+                <tr>
+                  <td>Address</td>
+                  <td><span  id="detailedAddress"></span>,<span  id="detailedcity"></span>,<span  id="detailedstate"></span>,<span  id="detailedcountry"></span></td>
+                </tr>
+                <tr>
+                  <td>Pincode</td>
+                  <td id="detailedPincode"></td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td id="detailedEmail"></td>
+                </tr>
+                <tr>
+                  <td>Phone</td>
+                  <td id="detailedPhone"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <script src="../assets/js/jquery.js"></script>
     <script src="../assets/js/bootstrap.bundle.js"></script>
@@ -216,16 +264,20 @@
                   id
               },
               success: function (data){
-                console.log(data)
                   if(data && data.length){
+                    const dob = new Date(data[0].dob);
+                    const dobday = (dob.getDate() < 10? '0':'')+dob.getDate();
+                    const dobmonth = (dob.getMonth() < 9? '0':'')+(dob.getMonth()+1);
+                    const dobyear =dob.getFullYear();
+                    const dobValue =dobyear+'-'+dobmonth+'-'+dobday;
                       $('#address').val(data[0].address);
                       $('#city').val(data[0].city);
                       $('#country').val(data[0].country);
-                      $('#dob').val(data[0].dob);
+                      $('#dob').val(dobValue);
                       $('#email').val(data[0].email);
-                      $('#firstName').val(data[0].firstName);
+                      $('#firstName').val(data[0].first_name);
                       $('#gender').val(data[0].gender);
-                      $('#lastName').val(data[0].lastName);
+                      $('#lastName').val(data[0].last_name);
                       $('#phone').val(data[0].phone);
                       $('#pincode').val(data[0].pincode);
                       $('#state').val(data[0].state);
@@ -248,6 +300,34 @@
               },
               success: function (data){
                   location.reload();
+              }
+          });
+      }
+      const viewData = (id) => {
+          $.ajax({
+              url: "../controllers/contact.cfc",
+              type: "post", 
+              dataType: "json",
+              data: {
+                  method: "getContact",
+                  id
+              },
+              success: function (data){
+                  if(data && data.length){
+                      $('#detailedfirstname').html(data[0].first_name);
+                      $('#detailedlastname').html(data[0].last_name);
+                      $('#detailedPhone').html(data[0].phone);
+                      $('#detailedEmail').html(data[0].email);
+                      $('#detailedPincode').html(data[0].pincode);
+                      $('#detailedtitle').html(data[0].titlename);
+                      $('#detailedAddress').html(data[0].address);
+                      $('#detailedcity').html(data[0].cityname);
+                      $('#detailedstate').html(data[0].statename);
+                      $('#detailedcountry').html(data[0].countryname);
+                      $('#detailedGender').html(data[0].gendername);
+                      $('#detailedDob').html(data[0].dob);
+                      $('#contactDetailModal').modal('show');
+                  }
               }
           });
       }

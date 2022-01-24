@@ -16,32 +16,119 @@
                     result='fileUploadResult'>
                 <cfset contactObj.setPhoto(fileUploadResult.serverFile)>
             </cfif>
-            <cfset contactObj.setTitle(form.title)>  
+            <cfset title = EntityLoad("title",form.title,true)> 
+            <cfset contactObj.setTitle(title)>  
             <cfset contactObj.setFirstName(form.firstName)>  
             <cfset contactObj.setLastName(form.lastName)>
             <cfset contactObj.setAddress(form.address)>
             <cfset contactObj.setPhone(form.phone)>
-            <cfset contactObj.setGender(form.gender)>
+            <cfset gender = EntityLoad("gender",form.gender,true)> 
+            <cfset contactObj.setGender(gender)>
             <cfset contactObj.setDob(form.dob)>
             <cfset contactObj.setEmail(form.email)>
-            <cfset contactObj.setCity(form.city)>
-            <cfset contactObj.setState(form.state)>
-            <cfset contactObj.setCountry(form.country)>
+            <cfset city = EntityLoad("cities",form.city,true)> 
+            <cfset contactObj.setCity(city)>
+            <cfset state = EntityLoad("states",form.state,true)> 
+            <cfset contactObj.setState(state)>
+            <cfset country = EntityLoad("countries",form.country,true)> 
+            <cfset contactObj.setCountry(country)>
             <cfset contactObj.setPincode(form.pincode)>
-            <cfset contactObj.setUserCreated(session.user.userId)>
+            <cfset user = EntityLoad("user",session.user.userId,true)> 
+            <cfset contactObj.setUserCreated(user)>
             <cfset EntitySave(contactObj)>
         </cfif>
-        <cflocation  url="../pages/contact.cfm" addtoken="false">
+        <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
     <cffunction  name="getContact" access="remote" returnformat="json" output="false">
         <cfargument name="id" type="numeric" required="true" />
-        <cfset contactObj = entityLoad("contact",id)>
-        <cfreturn contactObj>
+        <cfquery name="getItem" datasource="addressBook" returntype="array">
+        SELECT contact.id,contact.title,contact.dob,t.name as titlename,contact.first_name,contact.last_name,contact.address,contact.phone,contact.dob,contact.email,contact.pincode,contact.user_created,contact.gender,g.name as gendername,contact.city,c.name as cityname,contact.state,s.name as statename,contact.country,co.name as countryname
+        FROM contact 
+        JOIN title as t ON contact.title=t.id 
+        JOIN gender as g ON contact.gender=g.id 
+        JOIN tbl_cities as c ON contact.city=c.id 
+        JOIN tbl_states as s ON contact.state=s.id 
+        JOIN tbl_countries as co ON contact.country=co.id 
+        JOIN user ON contact.user_created=user.id 
+        WHERE contact.id = <cfqueryparam value="#id#" cfsqltype="cf_sql_integer">
+        </cfquery>
+        <cfreturn getItem />
     </cffunction>
     <cffunction  name="deleteContact" access="remote" returnformat="json" output="false">
         <cfargument name="id" type="numeric" required="true" />
         <cfset contactObj = entityLoad("contact",id,true)>
         <cfset EntityDelete(contactObj)>
         <cfreturn true>
+    </cffunction>
+
+     <cffunction  name="pdfdownload">
+        <cfset contactprint = EntityLoad("contact") />
+        <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <cfloop array="#contactprint#" index="i">
+                    <tr>
+                        <td>#i.firstName#  #i.lastName# </td>
+                        <td>#i.email#</td>
+                        <td>#i.phone#</td>
+                    </tr>
+                </cfloop>
+                        
+            </tbody>
+        </table>
+        </cfdocument> 
+        <!-- <cfheader name="Content-Disposition" value="attachment;filename=file.pdf">
+        <cfcontent type="application/octet-stream" file="#expandPath('.')#\files\file.pdf" deletefile="Yes"> -->
+        <cfprint type="pdf" source="file.pdf" printer="HP LaserJet 4345 CS">
+    </cffunction>
+    
+ <!---   <cffunction  name="exceldownload">
+        <cfset contactprint = EntityLoad("contact") />
+        <cfset spreadsheet = spreadsheetNew("Sheet A") />
+        <cfset spreadsheetCreateSheet(spreadsheet, "Sheet B") />
+        <cfset SpreadsheetSetActiveSheet(spreadsheet, "Sheet B")/>
+        <cfset SpreadsheetSetCellValue(spreadsheet, "Name",  1, 1) />
+        <cfset SpreadsheetSetCellValue(spreadsheet, "Email", 1, 2)/>
+        <cfset SpreadsheetSetCellValue(spreadsheet, "Phone", 1, 3) />
+        <cfoutput>
+            <cfloop array="#contactprint#" index="i">
+                <cfset SpreadSheetAddRow(spreadsheet,'#j.fname#,#j.email#,#j.phone#')/>
+            </cfloop>
+        </cfoutput>
+        <cfheader name="Content-Disposition" value="inline; filename=testFile.xls">
+        <cfcontent type="application/vnd.msexcel" variable="#SpreadSheetReadBinary(spreadsheet)#">
+    </cffunction> --->
+
+    <cffunction  name="print">
+        <cfset contactprint = EntityLoad("contact") />
+        <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <cfloop array="#contactprint#" index="i">
+                    <tr>
+                        <td>#i.firstName#  #i.lastName# </td>
+                        <td>#i.email#</td>
+                        <td>#i.phone#</td>
+                    </tr>
+                </cfloop>
+                        
+            </tbody>
+        </table>
+        </cfdocument> 
+        <cfprint type="pdf" source="../files/file.pdf" printer="Microsoft Print to PDF">
     </cffunction>
 </cfcomponent>
