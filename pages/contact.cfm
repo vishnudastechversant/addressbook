@@ -1,3 +1,6 @@
+<cfif !structKeyExists(session, "user") or !structKeyExists(session.user, "userId")>
+    <cflocation  url="../pages/login.cfm" addtoken="false">
+</cfif>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />

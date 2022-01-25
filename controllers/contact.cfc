@@ -62,7 +62,7 @@
     </cffunction>
 
      <cffunction  name="pdfdownload" access="remote">
-        <cfset contactprint = EntityLoad("contact") />
+        <cfset contactprint = EntityLoad("contact",{userCreated:EntityLoad("user",session.user.userId,true)}) />
         <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
         <table class="table">
             <thead>
@@ -73,28 +73,26 @@
                 </tr>
             </thead>
             <tbody>
-                <cfloop array="#contactprint#" index="i">
-                    <tr>
-                        <td>#i.firstName#  #i.lastName# </td>
-                        <td>#i.email#</td>
-                        <td>#i.phone#</td>
-                    </tr>
-                </cfloop>
-                        
+                <cfoutput>
+                    <cfloop array="#contactprint#" index="i">
+                        <tr>
+                            <td>#i.firstName#  #i.lastName# </td>
+                            <td>#i.email#</td>
+                            <td>#i.phone#</td>
+                        </tr>
+                    </cfloop>
+                </cfoutput>
             </tbody>
         </table>
         </cfdocument> 
-        <!-- <cfheader name="Content-Disposition" value="attachment;filename=file.pdf">
-        <cfcontent type="application/octet-stream" file="#expandPath('.')#\files\file.pdf" deletefile="Yes"> -->
-        <cfprint type="pdf" source="file.pdf" printer="HP LaserJet 4345 CS">
+        <cfprint type="pdf" source="../files/file.pdf" printer="Default">
         <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
     
     <cffunction  name="exceldownload" access="remote">
-        <cfset contactprint = EntityLoad("contact") />
-        <cfset spreadsheet = spreadsheetNew("Sheet A") />
-        <cfset spreadsheetCreateSheet(spreadsheet, "Sheet B") />
-        <cfset SpreadsheetSetActiveSheet(spreadsheet, "Sheet B")/>
+        <cfset contactprint = EntityLoad("contact",{userCreated:EntityLoad("user",session.user.userId,true)}) />
+        <cfset spreadsheet = spreadsheetNew("Contacts") />
+        <cfset SpreadsheetSetActiveSheet(spreadsheet, "Contacts")/>
         <cfset SpreadsheetSetCellValue(spreadsheet, "Name",  1, 1) />
         <cfset SpreadsheetSetCellValue(spreadsheet, "Email", 1, 2)/>
         <cfset SpreadsheetSetCellValue(spreadsheet, "Phone", 1, 3) />
@@ -103,13 +101,13 @@
                 <cfset SpreadSheetAddRow(spreadsheet,'#i.firstName# #i.lastName#,#i.email#,#i.phone#')/>
             </cfloop>
         </cfoutput>
-        <cfheader name="Content-Disposition" value="inline; filename=testFile.xls">
+        <cfheader name="Content-Disposition" value="inline; filename=Contacts.xls">
         <cfcontent type="application/vnd.msexcel" variable="#SpreadSheetReadBinary(spreadsheet)#">
         <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
 
     <cffunction  name="print" access="remote">
-        <cfset contactprint = EntityLoad("contact") />
+        <cfset contactprint = EntityLoad("contact",{userCreated:EntityLoad("user",session.user.userId,true)}) />
         <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
         <table class="table">
             <thead>
@@ -120,14 +118,15 @@
                 </tr>
             </thead>
             <tbody>
-                <cfloop array="#contactprint#" index="i">
-                    <tr>
-                        <td>#i.firstName#  #i.lastName# </td>
-                        <td>#i.email#</td>
-                        <td>#i.phone#</td>
-                    </tr>
-                </cfloop>
-                        
+                <cfoutput>
+                    <cfloop array="#contactprint#" index="i">
+                        <tr>
+                            <td>#i.firstName#  #i.lastName# </td>
+                            <td>#i.email#</td>
+                            <td>#i.phone#</td>
+                        </tr>
+                    </cfloop>
+                </cfoutput>                        
             </tbody>
         </table>
         </cfdocument> 

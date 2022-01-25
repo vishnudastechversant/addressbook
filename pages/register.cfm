@@ -1,3 +1,8 @@
+<cfif structKeyExists(session, "user")>
+    <cfif structKeyExists(session.user, "userId")>
+    <cflocation  url="../pages/contact.cfm" addtoken="false">
+    </cfif>
+</cfif>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
