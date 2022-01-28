@@ -15,6 +15,7 @@ component {
             if(find("contact",requestname) > 0){
                location("/addressbook/pages/login.cfm",false);
             }
+            return true;
         }else{
             if(find("contact",requestname) > 0 and find("login.cfc",requestname) == 0){
                 return true;

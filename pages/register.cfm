@@ -18,7 +18,7 @@
         <p class="login-logo">&#128214;</p>
       </div>
         <div class="col-8 form-container">
-          <form id="registerForm" method="post" action="../controllers/login.cfc?method=loginUser">
+          <form id="registerForm" method="post" action="../controllers/register.cfc?method=registerUser">
             <div class="form-group">
               <label for="firstName">First Name</label
               ><input
