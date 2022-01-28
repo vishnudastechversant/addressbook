@@ -85,8 +85,9 @@
             </tbody>
         </table>
         </cfdocument> 
-        <cfprint type="pdf" source="../files/file.pdf" printer="Default">
-        <cflocation  url="../pages/contact.cfm" addtoken="false"> 
+        <cfprint type="pdf" source="../files/file.pdf" printer="HP58CA6B (HP DeskJet 2700 series)">
+        <cfheader name="content-diposition" value="inline; filename=contact.pdf">
+        <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf" deletefile="no"/>
     </cffunction>
     
     <cffunction  name="exceldownload" access="remote">
@@ -106,7 +107,7 @@
         <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
 
-    <cffunction  name="print" access="remote">
+    <cffunction  name="printpdfdoc" access="remote">
         <cfset contactprint = EntityLoad("contact",{userCreated:EntityLoad("user",session.user.userId,true)}) />
         <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
         <table class="table">
@@ -126,11 +127,16 @@
                             <td>#i.phone#</td>
                         </tr>
                     </cfloop>
-                </cfoutput>                        
+                </cfoutput>
             </tbody>
         </table>
         </cfdocument> 
-        <cfprint type="pdf" source="../files/file.pdf" printer="Microsoft Print to PDF">
+        <cfprint type="pdf" source="../files/file.pdf" printer=" Microsoft Print to PDF">
+        <cfheader name="content-diposition" value="inline; filename=contact.pdf">
+        <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf"/>
+        <!--- <cfheader name="content-diposition" value="inline; filename=contact.pdf">
+        <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf" deletefile="no"/> --->
+
         <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
 </cfcomponent>
