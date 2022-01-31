@@ -52,10 +52,12 @@
                 <cfset  userObj.setUserName("#first_name#")/>
                 <cfset  userObj.setEmail("#email#")/>
                 <cfset EntitySave(userObj) />
-                <cfset  userDetailExist = ormExecuteQuery( "FROM user WHERE id = '#userObj.getid()#'" ) />
+                <cfset session.user["userId"] = userObj.getid()>    
+                <cfset session.user["name"] = userObj.getName()>
+            <cfelse>
+                <cfset session.user["userId"] = userDetailExist["1"].id>    
+                <cfset session.user["name"] = userDetailExist["1"].getName()>
             </cfif>
-            <cfset session.user["userId"] = userDetailExist["1"].id>    
-            <cfset session.user["name"] = userDetailExist["1"].getName()>
             <cfreturn true>
     </cffunction>
     <cffunction  name="authenticateRedirect" access="remote">
