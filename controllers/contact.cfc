@@ -41,18 +41,13 @@
     </cffunction>
     <cffunction  name="getContact" access="remote" returnformat="json" output="false">
         <cfargument name="id" type="numeric" required="true" />
-        <cfquery name="getItem" datasource="addressBook" returntype="array">
-        SELECT contact.id,contact.title,contact.dob,t.name as titlename,contact.first_name,contact.last_name,contact.address,contact.phone,contact.dob,contact.email,contact.pincode,contact.user_created,contact.gender,g.name as gendername,contact.city,c.name as cityname,contact.state,s.name as statename,contact.country,co.name as countryname
-        FROM contact 
-        JOIN title as t ON contact.title=t.id 
-        JOIN gender as g ON contact.gender=g.id 
-        JOIN tbl_cities as c ON contact.city=c.id 
-        JOIN tbl_states as s ON contact.state=s.id 
-        JOIN tbl_countries as co ON contact.country=co.id 
-        JOIN user ON contact.user_created=user.id 
-        WHERE contact.id = <cfqueryparam value="#id#" cfsqltype="cf_sql_integer">
-        </cfquery>
-        <cfreturn getItem />
+        <cfset contact = entityLoadByPK("contact", id)>
+        <cfset contact["titleData"] = contact.getTitleData()>
+        <cfset contact["genderData"] = contact.getGenderData()>
+        <cfset contact["cityData"] = contact.getCityData()>
+        <cfset contact["stateData"] = contact.getStateData()>
+        <cfset contact["countryData"] = contact.getCountryData()>
+        <cfreturn contact>
     </cffunction>
     <cffunction  name="deleteContact" access="remote" returnformat="json" output="false">
         <cfargument name="id" type="numeric" required="true" />

@@ -46,7 +46,7 @@
                   </tr>
                 </thead>
                 <tbody>
-              <cfset contacts = entityLoad( "contact",{userCreated:entityLoad( "user",session.user.userId,true)})>
+              <cfset contacts = entityLoad( "contact",{userCreated:session.user.userId})>
               <cfloop array="#contacts#" index="contact">
                 <cfoutput>
                     <td><cfimage action="writeToBrowser" source="#imageNew("E:\Work\Coldfusion\cfusion\wwwroot\addressbook\contactImages\#contact.getPhoto()#")#" name="image" width="50" height="50"></td>
@@ -264,26 +264,26 @@
                   id
               },
               success: function (data){
-                  if(data && data.length){
-                    const dob = new Date(data[0].dob);
+                  if(data){
+                    const dob = new Date(data.dob);
                     const dobday = (dob.getDate() < 10? '0':'')+dob.getDate();
                     const dobmonth = (dob.getMonth() < 9? '0':'')+(dob.getMonth()+1);
                     const dobyear =dob.getFullYear();
                     const dobValue =dobyear+'-'+dobmonth+'-'+dobday;
-                      $('#address').val(data[0].address);
-                      $('#city').val(data[0].city);
-                      $('#country').val(data[0].country);
+                      $('#address').val(data.address);
+                      $('#city').val(data.city);
+                      $('#country').val(data.country);
                       $('#dob').val(dobValue);
-                      $('#email').val(data[0].email);
-                      $('#firstName').val(data[0].first_name);
-                      $('#gender').val(data[0].gender);
-                      $('#lastName').val(data[0].last_name);
-                      $('#phone').val(data[0].phone);
-                      $('#pincode').val(data[0].pincode);
-                      $('#state').val(data[0].state);
-                      $('#title').val(data[0].title);
+                      $('#email').val(data.email);
+                      $('#firstName').val(data.firstName);
+                      $('#gender').val(data.gender);
+                      $('#lastName').val(data.lastName);
+                      $('#phone').val(data.phone);
+                      $('#pincode').val(data.pincode);
+                      $('#state').val(data.state);
+                      $('#title').val(data.title);
                       $('#photoChange').val(1);
-                      $('#id').val(data[0].id);
+                      $('#id').val(data.id);
                       $('#contactModal').modal('show');
                   }
               }
@@ -313,19 +313,19 @@
                   id
               },
               success: function (data){
-                  if(data && data.length){
-                      $('#detailedfirstname').html(data[0].first_name);
-                      $('#detailedlastname').html(data[0].last_name);
-                      $('#detailedPhone').html(data[0].phone);
-                      $('#detailedEmail').html(data[0].email);
-                      $('#detailedPincode').html(data[0].pincode);
-                      $('#detailedtitle').html(data[0].titlename);
-                      $('#detailedAddress').html(data[0].address);
-                      $('#detailedcity').html(data[0].cityname);
-                      $('#detailedstate').html(data[0].statename);
-                      $('#detailedcountry').html(data[0].countryname);
-                      $('#detailedGender').html(data[0].gendername);
-                      $('#detailedDob').html(data[0].dob);
+                  if(data){
+                      $('#detailedfirstname').html(data.firstName);
+                      $('#detailedlastname').html(data.lastName);
+                      $('#detailedPhone').html(data.phone);
+                      $('#detailedEmail').html(data.email);
+                      $('#detailedPincode').html(data.pincode);
+                      $('#detailedtitle').html(data.titleData.name);
+                      $('#detailedAddress').html(data.address);
+                      $('#detailedcity').html(data.cityData.name);
+                      $('#detailedstate').html(data.stateData.name);
+                      $('#detailedcountry').html(data.countryData.name);
+                      $('#detailedGender').html(data.genderData.name);
+                      $('#detailedDob').html(data.dob);
                       $('#contactDetailModal').modal('show');
                   }
               }
