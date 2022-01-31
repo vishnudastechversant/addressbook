@@ -16,25 +16,19 @@
                     result='fileUploadResult'>
                 <cfset contactObj.setPhoto(fileUploadResult.serverFile)>
             </cfif>
-            <cfset title = EntityLoad("title",form.title,true)> 
-            <cfset contactObj.setTitle(title)>  
+            <cfset contactObj.setTitle(form.title)>  
             <cfset contactObj.setFirstName(form.firstName)>  
             <cfset contactObj.setLastName(form.lastName)>
             <cfset contactObj.setAddress(form.address)>
             <cfset contactObj.setPhone(form.phone)>
-            <cfset gender = EntityLoad("gender",form.gender,true)> 
-            <cfset contactObj.setGender(gender)>
+            <cfset contactObj.setGender(form.gender)>
             <cfset contactObj.setDob(form.dob)>
             <cfset contactObj.setEmail(form.email)>
-            <cfset city = EntityLoad("cities",form.city,true)> 
-            <cfset contactObj.setCity(city)>
-            <cfset state = EntityLoad("states",form.state,true)> 
-            <cfset contactObj.setState(state)>
-            <cfset country = EntityLoad("countries",form.country,true)> 
-            <cfset contactObj.setCountry(country)>
+            <cfset contactObj.setCity(form.city)>
+            <cfset contactObj.setState(form.state)>
+            <cfset contactObj.setCountry(form.country)>
             <cfset contactObj.setPincode(form.pincode)>
-            <cfset user = EntityLoad("user",session.user.userId,true)> 
-            <cfset contactObj.setUserCreated(user)>
+            <cfset contactObj.setUserCreated(session.user.userId)>
             <cfset EntitySave(contactObj)>
         </cfif>
         <cflocation  url="../pages/contact.cfm" addtoken="false"> 
