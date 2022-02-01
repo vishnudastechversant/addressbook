@@ -1,11 +1,7 @@
 <cfcomponent>
     <cffunction  name="contact" access="remote">
         <cfif structKeyExists(form, 'id')> 
-            <cfif form.id GT 0> 
-                <cfset contactObj = EntityLoad("contact",form.id,true)> 
-            <cfelse>
-                <cfset contactObj = EntityNew("contact")> 
-            </cfif>
+            <cfset photoName = "">
             <cfif structKeyExists(form, 'photo') and form.photo != ""  and form.photoChange == 0> 
                 <cffile 
                     action="upload"
@@ -14,24 +10,35 @@
                     destination="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\contactImages"
                     nameConflict='MakeUnique'
                     result='fileUploadResult'>
-                <cfset contactObj.setPhoto(fileUploadResult.serverFile)>
+                    <cfset photoName = fileUploadResult.serverFile>
             </cfif>
-            <cfset contactObj.setTitle(form.title)>  
-            <cfset contactObj.setFirstName(form.firstName)>  
-            <cfset contactObj.setLastName(form.lastName)>
-            <cfset contactObj.setAddress(form.address)>
-            <cfset contactObj.setPhone(form.phone)>
-            <cfset contactObj.setGender(form.gender)>
-            <cfset contactObj.setDob(form.dob)>
-            <cfset contactObj.setEmail(form.email)>
-            <cfset contactObj.setCity(form.city)>
-            <cfset contactObj.setState(form.state)>
-            <cfset contactObj.setCountry(form.country)>
-            <cfset contactObj.setPincode(form.pincode)>
-            <cfset contactObj.setUserCreated(session.user.userId)>
-            <cfset EntitySave(contactObj)>
+            <cfif form.id EQ 0>
+                <cfquery datasource = "addressBook" name='addContact' result="updatedData">
+                    INSERT INTO contact (title, first_name, last_name, address, phone, email, photo, gender, dob, city, state, country, pincode, user_created) 
+                    VALUES (<cfqueryparam value="#form.title#">,<cfqueryparam value="#form.firstName#">,<cfqueryparam value="#form.lastName#">,<cfqueryparam value="#form.address#">,<cfqueryparam value="#form.phone#">,<cfqueryparam value="#form.email#">,<cfqueryparam value="#photoName#">,<cfqueryparam value="#form.gender#">,<cfqueryparam value="#form.dob#">,<cfqueryparam value="#form.city#">,<cfqueryparam value="#form.state#">,<cfqueryparam value="#form.country#">,<cfqueryparam value="#form.pincode#">,<cfqueryparam value="#session.user.userId#">)
+                </cfquery>
+            <cfelse>
+                <cfquery datasource = "addressBook" name='addContact' result="insertedData">
+                    UPDATE  contact 
+                    SET title = <cfqueryparam value="#form.title#">, 
+                    first_name = <cfqueryparam value="#form.firstName#">,
+                    last_name = <cfqueryparam value="#form.lastName#">,
+                    address = <cfqueryparam value="#form.address#">,
+                    phone = <cfqueryparam value="#form.phone#">,
+                    email = <cfqueryparam value="#form.email#">,
+                    photo = <cfqueryparam value="#photoName#">,
+                    gender = <cfqueryparam value="#form.gender#">,
+                    dob = <cfqueryparam value="#form.dob#">,
+                    city = <cfqueryparam value="#form.city#">,
+                    state = <cfqueryparam value="#form.state#">,
+                    country = <cfqueryparam value="#form.country#">,
+                    pincode = <cfqueryparam value="#form.pincode#">,
+                    user_created = <cfqueryparam value="#session.user.userId#">
+                    WHERE id = <cfqueryparam value="#form.id#">
+                </cfquery>
+            </cfif>
         </cfif>
-        <cflocation  url="../pages/contact.cfm" addtoken="false"> 
+        <cflocation  url="../pages/contact.cfm" addtoken="false">
     </cffunction>
     <cffunction  name="getContact" access="remote" returnformat="json" output="false">
         <cfargument name="id" type="numeric" required="true" />
@@ -123,9 +130,6 @@
         <cfprint type="pdf" source="../files/file.pdf" printer=" Microsoft Print to PDF">
         <cfheader name="content-diposition" value="inline; filename=contact.pdf">
         <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf"/>
-        <!--- <cfheader name="content-diposition" value="inline; filename=contact.pdf">
-        <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf" deletefile="no"/> --->
-
         <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
 </cfcomponent>
