@@ -2,7 +2,6 @@
     <cffunction  name="loginUser" access="remote">
         <cfif structKeyExists(form, 'submit')>
             <cfset userData = entityLoad("user",{userName:form.username,password:hash(form.password)})>
-            <cfdump  var="#arrayIsEmpty(userData)#">
              <cfif arrayIsEmpty(userData)> 
                 <cflocation  url="../pages/login.cfm" addtoken="false">
             <cfelse>

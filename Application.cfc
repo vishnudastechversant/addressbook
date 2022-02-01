@@ -15,17 +15,6 @@ component {
             if(!(find("login",requestname) > 0 or find("register",requestname) > 0)){
                location("/addressbook/pages/login.cfm",false);
             }
-            return true;
-        }else{
-            if(find("contact",requestname) > 0 and find("login.cfc",requestname) == 0){
-                return true;
-            }
-            if( find("login.cfc",requestname) > 0) {
-                if( structKeyExists(url, "method") and url.method == 'logout'){
-                    return true;
-                }
-            }
-            location("/addressbook/pages/contact.cfm",false);
         }
     }
 }
