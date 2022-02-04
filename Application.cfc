@@ -19,6 +19,6 @@ component {
     }
 
     function onError(exception){
-        writeOutput('<pre>#arguments.exception.message#</pre>')
+        writeOutput('<pre> ERROR: #arguments.exception.message#</pre>')
     }
 }
