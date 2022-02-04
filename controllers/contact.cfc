@@ -15,7 +15,20 @@
             <cfif form.id EQ 0>
                 <cfquery datasource = "addressBook" name='addContact' result="updatedData">
                     INSERT INTO contact (title, first_name, last_name, address, phone, email, photo, gender, dob, city, state, country, pincode, user_created) 
-                    VALUES (<cfqueryparam value="#form.title#">,<cfqueryparam value="#form.firstName#">,<cfqueryparam value="#form.lastName#">,<cfqueryparam value="#form.address#">,<cfqueryparam value="#form.phone#">,<cfqueryparam value="#form.email#">,<cfqueryparam value="#photoName#">,<cfqueryparam value="#form.gender#">,<cfqueryparam value="#form.dob#">,<cfqueryparam value="#form.city#">,<cfqueryparam value="#form.state#">,<cfqueryparam value="#form.country#">,<cfqueryparam value="#form.pincode#">,<cfqueryparam value="#session.user.userId#">)
+                    VALUES (<cfqueryparam value="#form.title#">,
+                    <cfqueryparam value="#form.firstName#">,
+                    <cfqueryparam value="#form.lastName#">,
+                    <cfqueryparam value="#form.address#">,
+                    <cfqueryparam value="#form.phone#">,
+                    <cfqueryparam value="#form.email#">,
+                    <cfqueryparam value="#photoName#">,
+                    <cfqueryparam value="#form.gender#">,
+                    <cfqueryparam value="#form.dob#">,
+                    <cfqueryparam value="#form.city#">,
+                    <cfqueryparam value="#form.state#">,
+                    <cfqueryparam value="#form.country#">,
+                    <cfqueryparam value="#form.pincode#">,
+                    <cfqueryparam value="#session.user.userId#">)
                 </cfquery>
             <cfelse>
                 <cfquery datasource = "addressBook" name='addContact' result="insertedData">
@@ -58,7 +71,7 @@
     </cffunction>
 
      <cffunction  name="pdfdownload" access="remote">
-        <cfset contactprint = EntityLoad("contact",{userCreated:EntityLoad("user",session.user.userId,true)}) />
+        <cfset contactprint = EntityLoad("contact",{userCreated:session.user.userId}) />
         <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
         <table class="table">
             <thead>
@@ -87,7 +100,7 @@
     </cffunction>
     
     <cffunction  name="exceldownload" access="remote">
-        <cfset contactprint = EntityLoad("contact",{userCreated:EntityLoad("user",session.user.userId,true)}) />
+        <cfset contactprint = EntityLoad("contact",{userCreated:session.user.userId}) />
         <cfset spreadsheet = spreadsheetNew("Contacts") />
         <cfset SpreadsheetSetActiveSheet(spreadsheet, "Contacts")/>
         <cfset SpreadsheetSetCellValue(spreadsheet, "Name",  1, 1) />
@@ -104,7 +117,7 @@
     </cffunction>
 
     <cffunction  name="printpdfdoc" access="remote">
-        <cfset contactprint = EntityLoad("contact",{userCreated:EntityLoad("user",session.user.userId,true)}) />
+        <cfset contactprint = EntityLoad("contact",{userCreated:session.user.userId}) />
         <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
         <table class="table">
             <thead>
