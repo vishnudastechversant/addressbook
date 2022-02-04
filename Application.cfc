@@ -17,4 +17,8 @@ component {
             }
         }
     }
+
+    function onError(exception){
+        writeOutput('<pre>#arguments.exception.message#</pre>')
+    }
 }
