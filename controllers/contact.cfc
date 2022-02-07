@@ -15,38 +15,38 @@
             <cfif form.id EQ 0>
                 <cfquery datasource = "addressBook" name='addContact' result="updatedData">
                     INSERT INTO contact (title, first_name, last_name, address, phone, email, photo, gender, dob, city, state, country, pincode, user_created) 
-                    VALUES (<cfqueryparam value="#form.title#">,
-                    <cfqueryparam value="#form.firstName#">,
-                    <cfqueryparam value="#form.lastName#">,
-                    <cfqueryparam value="#form.address#">,
-                    <cfqueryparam value="#form.phone#">,
-                    <cfqueryparam value="#form.email#">,
-                    <cfqueryparam value="#photoName#">,
-                    <cfqueryparam value="#form.gender#">,
-                    <cfqueryparam value="#form.dob#">,
-                    <cfqueryparam value="#form.city#">,
-                    <cfqueryparam value="#form.state#">,
-                    <cfqueryparam value="#form.country#">,
-                    <cfqueryparam value="#form.pincode#">,
-                    <cfqueryparam value="#session.user.userId#">)
+                    VALUES (<cfqueryparam value="#form.title#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#form.firstName#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#form.lastName#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#form.address#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#form.phone#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#photoName#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#form.gender#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#form.dob#" cfsqltype="cf_sql_date">,
+                    <cfqueryparam value="#form.city#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#form.state#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#form.country#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#form.pincode#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#session.user.userId#" cfsqltype="cf_sql_integer">)
                 </cfquery>
             <cfelse>
                 <cfquery datasource = "addressBook" name='addContact' result="insertedData">
                     UPDATE  contact 
-                    SET title = <cfqueryparam value="#form.title#">, 
-                    first_name = <cfqueryparam value="#form.firstName#">,
-                    last_name = <cfqueryparam value="#form.lastName#">,
-                    address = <cfqueryparam value="#form.address#">,
-                    phone = <cfqueryparam value="#form.phone#">,
-                    email = <cfqueryparam value="#form.email#">,
-                    photo = <cfqueryparam value="#photoName#">,
-                    gender = <cfqueryparam value="#form.gender#">,
-                    dob = <cfqueryparam value="#form.dob#">,
-                    city = <cfqueryparam value="#form.city#">,
-                    state = <cfqueryparam value="#form.state#">,
-                    country = <cfqueryparam value="#form.country#">,
-                    pincode = <cfqueryparam value="#form.pincode#">,
-                    user_created = <cfqueryparam value="#session.user.userId#">
+                    SET title = <cfqueryparam value="#form.title#" cfsqltype="cf_sql_integer">, 
+                    first_name = <cfqueryparam value="#form.firstName#" cfsqltype="cf_sql_varchar">,
+                    last_name = <cfqueryparam value="#form.lastName#" cfsqltype="cf_sql_varchar">,
+                    address = <cfqueryparam value="#form.address#" cfsqltype="cf_sql_varchar">,
+                    phone = <cfqueryparam value="#form.phone#" cfsqltype="cf_sql_varchar">,
+                    email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar">,
+                    photo = <cfqueryparam value="#photoName#" cfsqltype="cf_sql_varchar">,
+                    gender = <cfqueryparam value="#form.gender#" cfsqltype="cf_sql_integer">,
+                    dob = <cfqueryparam value="#form.dob#" cfsqltype="cf_sql_date">,
+                    city = <cfqueryparam value="#form.city#" cfsqltype="cf_sql_integer">,
+                    state = <cfqueryparam value="#form.state#" cfsqltype="cf_sql_integer">,
+                    country = <cfqueryparam value="#form.country#" cfsqltype="cf_sql_integer">,
+                    pincode = <cfqueryparam value="#form.pincode#" cfsqltype="cf_sql_integer">,
+                    user_created = <cfqueryparam value="#session.user.userId#" cfsqltype="cf_sql_integer">
                     WHERE id = <cfqueryparam value="#form.id#">
                 </cfquery>
             </cfif>
@@ -145,4 +145,5 @@
         <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf"/>
         <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
+    
 </cfcomponent>

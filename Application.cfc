@@ -21,4 +21,8 @@ component {
     function onError(exception){
         writeOutput('<pre> ERROR: #arguments.exception.message#</pre>')
     }
+
+    function onMissingTemplate(targetPage){
+        writeOutput("Page Doesn't exist")
+    }
 }
