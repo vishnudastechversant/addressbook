@@ -48,8 +48,9 @@
                 <tbody>
               <cfset contacts = entityLoad( "contact",{userCreated:session.user.userId})>
               <cfloop array="#contacts#" index="contact">
+                <cfdump  var="#contact.getPhoto()#">
                 <cfoutput>
-                    <td><cfimage action="writeToBrowser" source="#imageNew("E:\Work\Coldfusion\cfusion\wwwroot\addressbook\contactImages\#contact.getPhoto()#")#" name="image" width="50" height="50"></td>
+                    <td><cfimage action="writeToBrowser" source="#(len(contact.getPhoto()) LT 1)?'E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\happy.jpg':imageNew("E:\Work\Coldfusion\cfusion\wwwroot\addressbook\contactImages\#contact.getPhoto()#")#" name="image" width="50" height="50"></td>
                     <td>#contact.getName()#</td>
                     <td>#contact.getEmail()#</td>
                     <td>#contact.getPhone()#</td>
@@ -67,9 +68,6 @@
         </div>
       </div>
     </section>
-
-
-
 
     <div class="modal" id="contactModal">
       <div class="modal-dialog modal-dialog-scrollable">

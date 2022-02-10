@@ -1,5 +1,6 @@
 <cfcomponent>
     <cffunction  name="loginUser" access="remote">
+                    <cfinvoke  method="fiveSecondTimer" component="register">
         <cfif structKeyExists(form, 'submit')>
             <cfset userData = entityLoad("user",{userName:form.username,password:hash(form.password)})>
              <cfif arrayIsEmpty(userData)> 

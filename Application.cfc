@@ -12,15 +12,15 @@ component {
 
     function onRequestStart(requestname){ 
         if(!structKeyExists(session, "user") or !structKeyExists(session.user, "userId") ){
-            if(!(find("login",requestname) > 0 or find("register",requestname) > 0)){
+            if(!(findNoCase("login",requestname) > 0 or findNoCase("register",requestname) > 0)){
                location("/addressbook/pages/login.cfm",false);
             }
         }
     }
 
-    function onError(exception){
-        writeOutput('<pre> ERROR: #arguments.exception.message#</pre>')
-    }
+    // function onError(exception){
+    //     writeOutput('<pre> ERROR: #arguments.exception.message#</pre>')
+    // }
 
     function onMissingTemplate(targetPage){
         writeOutput("Page Doesn't exist")

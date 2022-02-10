@@ -13,6 +13,10 @@
                     <cfset photoName = fileUploadResult.serverFile>
             </cfif>
             <cfif form.id EQ 0>
+                <cfset contact = entityLoad("contact", {phone:form.phone,userCreated:session.user.userId})>
+                <cfif arrayLen(contact) GT 1>
+                    <cflocation  url="../pages/contact.cfm" addtoken="false">
+                </cfif>
                 <cfquery datasource = "addressBook" name='addContact' result="updatedData">
                     INSERT INTO contact (title, first_name, last_name, address, phone, email, photo, gender, dob, city, state, country, pincode, user_created) 
                     VALUES (<cfqueryparam value="#form.title#" cfsqltype="cf_sql_integer">,
@@ -70,7 +74,7 @@
         <cfreturn true>
     </cffunction>
 
-     <cffunction  name="pdfdownload" access="remote">
+     <cffunction  name="pdfdownload">
         <cfset contactprint = EntityLoad("contact",{userCreated:session.user.userId}) />
         <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
         <table class="table">
@@ -99,7 +103,7 @@
         <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf" deletefile="no"/>
     </cffunction>
     
-    <cffunction  name="exceldownload" access="remote">
+    <cffunction  name="exceldownload">
         <cfset contactprint = EntityLoad("contact",{userCreated:session.user.userId}) />
         <cfset spreadsheet = spreadsheetNew("Contacts") />
         <cfset SpreadsheetSetActiveSheet(spreadsheet, "Contacts")/>
@@ -145,5 +149,4 @@
         <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf"/>
         <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
-    
 </cfcomponent>
