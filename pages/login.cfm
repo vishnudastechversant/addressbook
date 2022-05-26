@@ -21,28 +21,14 @@
         <div class="col-8 form-container">
           <form method="post" action="../controllers/login.cfc?method=loginUser">
             <div class="form-group">
-              <label for="username">Username</label
-              ><input
-                type="text"
-                name="username"
-                id="username"
-                class="form-control"
-                required="required"
-              />
+              <label for="username">Username</label>
+              <input type="text" name="username" id="username" class="form-control" required="required"/>
             </div>
             <div class="form-group">
               <label for="password">Password</label
               ><input
-                type="password"
-                name="password"
-                id="password"
-                class="form-control"
-                required="required"
-              />
-              <button
-                type="submit" name="submit" id="submit"
-                class="btn btn-primary text-white mt-3 col-12"
-              >
+                type="password" name="password" id="password" class="form-control" required="required"/>
+              <button type="submit" name="submit" id="submit" class="btn btn-primary text-white mt-3 col-12">
                LogIn
               </button>
             </div>

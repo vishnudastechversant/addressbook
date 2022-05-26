@@ -1,8 +1,8 @@
 <cfcomponent>
     <cffunction  name="loginUser" access="remote">
+                    <cfinvoke  method="fiveSecondTimer" component="register">
         <cfif structKeyExists(form, 'submit')>
             <cfset userData = entityLoad("user",{userName:form.username,password:hash(form.password)})>
-            <cfdump  var="#arrayIsEmpty(userData)#">
              <cfif arrayIsEmpty(userData)> 
                 <cflocation  url="../pages/login.cfm" addtoken="false">
             <cfelse>
@@ -28,13 +28,19 @@
             redirecturi="http://localhost:8500/addressbook/controllers/login.cfc?method=google">
             <cfset   userDetailExist = ormExecuteQuery( "FROM user WHERE email = '#resultUser.other.email#'" ) />
             <cfif arrayIsEmpty(userDetailExist )>
-                <cfset  userObj = entityNew('user')/>
-                <cfset  userObj.setFirstName("#resultUser.other.given_name#")/>
-                <cfset  userObj.setLastName("#resultUser.other.family_name#")/>
-                <cfset  userObj.setUserName("#resultUser.other.given_name#")/>
-                <cfset  userObj.setEmail("#resultUser.other.email#")/>
-                <cfset EntitySave(userObj) />
-                <cfset  userDetailExist = ormExecuteQuery( "FROM user WHERE id = '#userObj.getid()#'" ) />
+                <cftry>
+                    <cfquery datasource = "addressBook" name='registerGoogleUser' result="userData">
+                        INSERT INTO user (first_name, last_name, username, email ) 
+                        VALUES (<cfqueryparam value="#resultUser.other.given_name#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#resultUser.other.family_name#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#resultUser.other.given_name#" cfsqltype="cf_sql_varchar">,
+                        <cfqueryparam value="#resultUser.other.email#" cfsqltype="cf_sql_varchar">)
+                    </cfquery>
+                    <cfset  userDetailExist = ormExecuteQuery( "FROM user WHERE id = '#userData.generatedKey()#'" ) />
+                <cfcatch type="exception">
+                    <cflocation  url="../controllers/login.cfc?method=authenticateRedirect" addtoken="false">
+                </cfcatch>
+                </cftry>
             </cfif>
             <cfset session.user["userId"] = userDetailExist["1"].id>    
             <cfset session.user["name"] = userDetailExist["1"].getName()>
@@ -46,16 +52,23 @@
         <cfargument name="last_name" type="string" required="true" />
             <cfset   userDetailExist = ormExecuteQuery( "FROM user WHERE email = '#email#'" ) />
             <cfif arrayIsEmpty(userDetailExist )>
-                <cfset  userObj = entityNew('user')/>
-                <cfset  userObj.setFirstName("#first_name#")/>
-                <cfset  userObj.setLastName("#last_name#")/>
-                <cfset  userObj.setUserName("#first_name#")/>
-                <cfset  userObj.setEmail("#email#")/>
-                <cfset EntitySave(userObj) />
-                <cfset  userDetailExist = ormExecuteQuery( "FROM user WHERE id = '#userObj.getid()#'" ) />
+                <cftry>
+                    <cfset  userObj = entityNew('user')/>
+                    <cfset  userObj.setFirstName("#first_name#")/>
+                    <cfset  userObj.setLastName("#last_name#")/>
+                    <cfset  userObj.setUserName("#first_name#")/>
+                    <cfset  userObj.setEmail("#email#")/>
+                    <cfset EntitySave(userObj) />
+                    <cfset session.user["userId"] = userObj.getid()>    
+                    <cfset session.user["name"] = userObj.getName()>
+                    <cfcatch type="exception">
+                        <cflocation  url="../controllers/login.cfc?method=authenticateRedirect" addtoken="false">
+                    </cfcatch>
+                </cftry>
+            <cfelse>
+                <cfset session.user["userId"] = userDetailExist["1"].id>    
+                <cfset session.user["name"] = userDetailExist["1"].getName()>
             </cfif>
-            <cfset session.user["userId"] = userDetailExist["1"].id>    
-            <cfset session.user["name"] = userDetailExist["1"].getName()>
             <cfreturn true>
     </cffunction>
     <cffunction  name="authenticateRedirect" access="remote">

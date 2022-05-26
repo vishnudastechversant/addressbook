@@ -18,73 +18,34 @@
         <p class="login-logo">&#128214;</p>
       </div>
         <div class="col-8 form-container">
-          <form id="registerForm" method="post" action="../controllers/login.cfc?method=loginUser">
+          <form id="registerForm" method="post" action="../controllers/register.cfc?method=registerUser">
             <div class="form-group">
-              <label for="firstName">First Name</label
-              ><input
-                type="text"
-                name="firstName"
-                id="firstName"
-                class="form-control"
-                required="required"
-              />
+              <label for="firstName">First Name</label>
+              <input type="text" name="firstName" id="firstName" class="form-control" required="required"/>
             </div>
             <div class="form-group">
-              <label for="lastName">Last Name</label
-              ><input
-                type="text"
-                name="lastName"
-                id="lastName"
-                class="form-control"
-                required="required"
-              />
+              <label for="lastName">Last Name</label>
+              <input type="text" name="lastName" id="lastName" class="form-control" required="required"/>
             </div>
             <div class="form-group">
-              <label for="username">Username</label
-              ><input
-                type="text"
-                name="username"
-                id="username"
-                class="form-control"
-                required="required"
-              />
+              <label for="username">Username</label>
+              <input type="text" name="username" id="username" class="form-control" required="required"/>
             </div>
             <div class="form-group">
-              <label for="email">Email</label
-              ><input
-                type="email"
-                name="email"
-                id="email"
-                class="form-control"
-                required="required"
-              />
+              <label for="email">Email</label>
+              <input type="email" name="email" id="email" class="form-control" required="required"/>
             </div>
             <div class="form-group">
-              <label for="password">Password</label
-              ><input
-                type="password"
-                name="password"
-                id="password"
-                class="form-control"
-                required="required"
-              />
+              <label for="password">Password</label>
+              <input type="password" name="password" id="password" class="form-control" required="required"/>
             </div>
             <div class="form-group">
-              <label for="confirmPassword">Confirm Password</label
-              ><input
-                type="password"
-                name="confirmPassword"
-                id="confirmPassword"
-                class="form-control"
-                required="required"
-              />
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" required="required"/>
             </div>
             <div class="form-group">
-              <button
-                type="submit" name="submit" id="submit"
-                class="btn btn-primary text-white mt-3 col-12"
-              >
-               Register
+              <button type="submit" name="submit" id="submit"class="btn btn-primary text-white mt-3 col-12">
+                Register
               </button>
             </div>
           </form>

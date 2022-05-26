@@ -1,11 +1,7 @@
 <cfcomponent>
     <cffunction  name="contact" access="remote">
         <cfif structKeyExists(form, 'id')> 
-            <cfif form.id GT 0> 
-                <cfset contactObj = EntityLoad("contact",form.id,true)> 
-            <cfelse>
-                <cfset contactObj = EntityNew("contact")> 
-            </cfif>
+            <cfset photoName = "">
             <cfif structKeyExists(form, 'photo') and form.photo != ""  and form.photoChange == 0> 
                 <cffile 
                     action="upload"
@@ -14,45 +10,62 @@
                     destination="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\contactImages"
                     nameConflict='MakeUnique'
                     result='fileUploadResult'>
-                <cfset contactObj.setPhoto(fileUploadResult.serverFile)>
+                    <cfset photoName = fileUploadResult.serverFile>
             </cfif>
-            <cfset title = EntityLoad("title",form.title,true)> 
-            <cfset contactObj.setTitle(title)>  
-            <cfset contactObj.setFirstName(form.firstName)>  
-            <cfset contactObj.setLastName(form.lastName)>
-            <cfset contactObj.setAddress(form.address)>
-            <cfset contactObj.setPhone(form.phone)>
-            <cfset gender = EntityLoad("gender",form.gender,true)> 
-            <cfset contactObj.setGender(gender)>
-            <cfset contactObj.setDob(form.dob)>
-            <cfset contactObj.setEmail(form.email)>
-            <cfset city = EntityLoad("cities",form.city,true)> 
-            <cfset contactObj.setCity(city)>
-            <cfset state = EntityLoad("states",form.state,true)> 
-            <cfset contactObj.setState(state)>
-            <cfset country = EntityLoad("countries",form.country,true)> 
-            <cfset contactObj.setCountry(country)>
-            <cfset contactObj.setPincode(form.pincode)>
-            <cfset user = EntityLoad("user",session.user.userId,true)> 
-            <cfset contactObj.setUserCreated(user)>
-            <cfset EntitySave(contactObj)>
+            <cfif form.id EQ 0>
+                <cfset contact = entityLoad("contact", {phone:form.phone,userCreated:session.user.userId})>
+                <cfif arrayLen(contact) GT 1>
+                    <cflocation  url="../pages/contact.cfm" addtoken="false">
+                </cfif>
+                <cfquery datasource = "addressBook" name='addContact' result="updatedData">
+                    INSERT INTO contact (title, first_name, last_name, address, phone, email, photo, gender, dob, city, state, country, pincode, user_created) 
+                    VALUES (<cfqueryparam value="#form.title#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#form.firstName#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#form.lastName#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#form.address#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#form.phone#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#photoName#" cfsqltype="cf_sql_varchar">,
+                    <cfqueryparam value="#form.gender#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#form.dob#" cfsqltype="cf_sql_date">,
+                    <cfqueryparam value="#form.city#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#form.state#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#form.country#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#form.pincode#" cfsqltype="cf_sql_integer">,
+                    <cfqueryparam value="#session.user.userId#" cfsqltype="cf_sql_integer">)
+                </cfquery>
+            <cfelse>
+                <cfquery datasource = "addressBook" name='addContact' result="insertedData">
+                    UPDATE  contact 
+                    SET title = <cfqueryparam value="#form.title#" cfsqltype="cf_sql_integer">, 
+                    first_name = <cfqueryparam value="#form.firstName#" cfsqltype="cf_sql_varchar">,
+                    last_name = <cfqueryparam value="#form.lastName#" cfsqltype="cf_sql_varchar">,
+                    address = <cfqueryparam value="#form.address#" cfsqltype="cf_sql_varchar">,
+                    phone = <cfqueryparam value="#form.phone#" cfsqltype="cf_sql_varchar">,
+                    email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_varchar">,
+                    photo = <cfqueryparam value="#photoName#" cfsqltype="cf_sql_varchar">,
+                    gender = <cfqueryparam value="#form.gender#" cfsqltype="cf_sql_integer">,
+                    dob = <cfqueryparam value="#form.dob#" cfsqltype="cf_sql_date">,
+                    city = <cfqueryparam value="#form.city#" cfsqltype="cf_sql_integer">,
+                    state = <cfqueryparam value="#form.state#" cfsqltype="cf_sql_integer">,
+                    country = <cfqueryparam value="#form.country#" cfsqltype="cf_sql_integer">,
+                    pincode = <cfqueryparam value="#form.pincode#" cfsqltype="cf_sql_integer">,
+                    user_created = <cfqueryparam value="#session.user.userId#" cfsqltype="cf_sql_integer">
+                    WHERE id = <cfqueryparam value="#form.id#">
+                </cfquery>
+            </cfif>
         </cfif>
-        <cflocation  url="../pages/contact.cfm" addtoken="false"> 
+        <cflocation  url="../pages/contact.cfm" addtoken="false">
     </cffunction>
     <cffunction  name="getContact" access="remote" returnformat="json" output="false">
         <cfargument name="id" type="numeric" required="true" />
-        <cfquery name="getItem" datasource="addressBook" returntype="array">
-        SELECT contact.id,contact.title,contact.dob,t.name as titlename,contact.first_name,contact.last_name,contact.address,contact.phone,contact.dob,contact.email,contact.pincode,contact.user_created,contact.gender,g.name as gendername,contact.city,c.name as cityname,contact.state,s.name as statename,contact.country,co.name as countryname
-        FROM contact 
-        JOIN title as t ON contact.title=t.id 
-        JOIN gender as g ON contact.gender=g.id 
-        JOIN tbl_cities as c ON contact.city=c.id 
-        JOIN tbl_states as s ON contact.state=s.id 
-        JOIN tbl_countries as co ON contact.country=co.id 
-        JOIN user ON contact.user_created=user.id 
-        WHERE contact.id = <cfqueryparam value="#id#" cfsqltype="cf_sql_integer">
-        </cfquery>
-        <cfreturn getItem />
+        <cfset contact = entityLoadByPK("contact", id)>
+        <cfset contact["titleData"] = contact.getTitleData()>
+        <cfset contact["genderData"] = contact.getGenderData()>
+        <cfset contact["cityData"] = contact.getCityData()>
+        <cfset contact["stateData"] = contact.getStateData()>
+        <cfset contact["countryData"] = contact.getCountryData()>
+        <cfreturn contact>
     </cffunction>
     <cffunction  name="deleteContact" access="remote" returnformat="json" output="false">
         <cfargument name="id" type="numeric" required="true" />
@@ -61,8 +74,8 @@
         <cfreturn true>
     </cffunction>
 
-     <cffunction  name="pdfdownload" access="remote">
-        <cfset contactprint = EntityLoad("contact",{userCreated:EntityLoad("user",session.user.userId,true)}) />
+     <cffunction  name="pdfdownload">
+        <cfset contactprint = EntityLoad("contact",{userCreated:session.user.userId}) />
         <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
         <table class="table">
             <thead>
@@ -90,8 +103,8 @@
         <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf" deletefile="no"/>
     </cffunction>
     
-    <cffunction  name="exceldownload" access="remote">
-        <cfset contactprint = EntityLoad("contact",{userCreated:EntityLoad("user",session.user.userId,true)}) />
+    <cffunction  name="exceldownload">
+        <cfset contactprint = EntityLoad("contact",{userCreated:session.user.userId}) />
         <cfset spreadsheet = spreadsheetNew("Contacts") />
         <cfset SpreadsheetSetActiveSheet(spreadsheet, "Contacts")/>
         <cfset SpreadsheetSetCellValue(spreadsheet, "Name",  1, 1) />
@@ -108,7 +121,7 @@
     </cffunction>
 
     <cffunction  name="printpdfdoc" access="remote">
-        <cfset contactprint = EntityLoad("contact",{userCreated:EntityLoad("user",session.user.userId,true)}) />
+        <cfset contactprint = EntityLoad("contact",{userCreated:session.user.userId}) />
         <cfdocument format="PDF"  filename="../files/file.pdf" overwrite="Yes">
         <table class="table">
             <thead>
@@ -134,9 +147,6 @@
         <cfprint type="pdf" source="../files/file.pdf" printer=" Microsoft Print to PDF">
         <cfheader name="content-diposition" value="inline; filename=contact.pdf">
         <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf"/>
-        <!--- <cfheader name="content-diposition" value="inline; filename=contact.pdf">
-        <cfcontent type="application/pdf" file="E:\Work\Coldfusion\cfusion\wwwroot\addressbook\files\file.pdf" deletefile="no"/> --->
-
         <cflocation  url="../pages/contact.cfm" addtoken="false"> 
     </cffunction>
 </cfcomponent>
